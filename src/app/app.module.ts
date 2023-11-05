@@ -6,12 +6,14 @@ import { HttpClientModule } from  '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { RepoSectionComponent } from './repo-section/repo-section.component';
+import { ButtonLoaderComponent } from './button-loader/button-loader.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserInfoComponent,
     RepoSectionComponent,
+    ButtonLoaderComponent,
   ],
   imports: [
     BrowserModule,
