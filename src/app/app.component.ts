@@ -46,6 +46,10 @@ export class AppComponent {
       this.toast.showWarning(userMessages.ENTER_NUMER);
       return;
     }
+    if (this.repoPerPage > 100 || this.repoPerPage < 1) {
+      this.toast.showWarning(userMessages.ENTER_VALID_NUMER);
+      return;
+    }
 
 
     // Loading indicators
