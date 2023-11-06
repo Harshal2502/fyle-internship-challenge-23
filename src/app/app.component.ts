@@ -6,7 +6,9 @@ import { ApiService } from './services/api.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
+
 export class AppComponent {
+
   githubUsername: string = '';
   userInfo: any;
   userRepo: any;

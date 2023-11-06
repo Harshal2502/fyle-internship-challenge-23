@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RepoSectionComponent } from './repo-section.component';
 
 describe('RepoSectionComponent', () => {
@@ -8,8 +7,9 @@ describe('RepoSectionComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RepoSectionComponent]
+      declarations: [RepoSectionComponent],
     });
+
     fixture = TestBed.createComponent(RepoSectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

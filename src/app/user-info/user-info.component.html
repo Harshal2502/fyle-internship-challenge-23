@@ -1,9 +1,12 @@
 <div class="flex flex-wrap items-start">
+
+    <!-- user avatar -->
     <div class="w-full flex justify-center md:w-1/4 mb-4 md:mb-0 text-center md:text-left">
         <img [src]="userInfo?.avatar_url" alt="User Avatar"
             class="w-32 h-32 md:w-40 md:h-40 rounded-full mb-2 md:mb-0 md:mr-4" />
     </div>
 
+    <!-- basic user information -->
     <div class="w-full md:w-1/2">
         <h2 class="text-3xl flex items-center font-semibold">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
@@ -42,4 +45,6 @@
                 {{ userInfo?.blog || "-" }}</a>
         </div>
     </div>
+
+
 </div>

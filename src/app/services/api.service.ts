@@ -15,6 +15,8 @@ export class ApiService {
     );
   }
 
+
+  // axios request to get the repositories of a user
   async getRepositories(url: any): Promise<any> {
     return await axios.get(url); // using axios inorder to access the link response header 
   }
