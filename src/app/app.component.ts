@@ -18,6 +18,7 @@ export class AppComponent {
   loader1: boolean = false;
   loader2: boolean = false;
   buttonLoader: boolean = false;
+  title: any = 'fyle-frontend-challenge';
 
   constructor(private apiService: ApiService) {
     this.updateVisiblePageCount();
