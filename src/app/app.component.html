@@ -15,7 +15,7 @@
 
         <div class="mb-4">
           <label for="RPP" class="block text-gray-600">Repositories per Page</label>
-          <input type="number" id="RPP" name="RPP" [(ngModel)]="repoPerPage"
+          <input type="number" max="100" min="3" id="RPP" name="RPP" [(ngModel)]="repoPerPage"
             class="w-full px-4 py-2  text-gray-800 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" />
         </div>
 
@@ -42,7 +42,7 @@
     <input type="text" id="username" name="username" [(ngModel)]="githubUsername" required
       class="px-4 py-2 text-gray-800 bg-gray-200 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500  mb-2 md:mb-0 br-sm"
       placeholder="GitHub Username" />
-    <input type="number" id="RPP" name="RPP" [(ngModel)]="repoPerPage"
+    <input type="number" id="RPP" name="RPP" max="100" min="3" [(ngModel)]="repoPerPage"
       class="px-4 py-2 text-gray-800 bg-gray-200 border border-gray-300 focus:outline-none focus:border-blue-500  mb-2 md:mb-0 br-sm"
       placeholder="Repositories per Page" />
     <button type="submit"

@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:userinfo": "ng test --include='**/user-info.component.spec.ts'",
+    "test:apiservice": "ng test --include='**/api.service.spec.ts'"
   },
   "private": true,
   "dependencies": {
