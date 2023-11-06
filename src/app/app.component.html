@@ -3,7 +3,7 @@
   <!-- Starting Form to get GitHub username which will be hidden after API response -->
   <div *ngIf="!userInfo" class="flex justify-center items-center h-screen">
     <div class="p-6 max-w-md bg-white shadow-lg rounded-lg w-100">
-      <h2 class="text-2xl title font-semibold mb-4">Let's Get Started! 🚀</h2>
+      <h2 class="text-2xl text-center title font-semibold mb-4">Let's Get Started! 🚀</h2>
 
       
       <form (ngSubmit)="getUserData(githubUsername)" class="mb-4">
@@ -59,8 +59,10 @@
     <!-- Basic user Info -->
     <app-user-info [userInfo]="userInfo"></app-user-info>
     <!-- User Repository display -->
-    <app-repo-section [loader2]="loader2" [userRepo]="userRepo"></app-repo-section>
+    <app-repo-section *ngIf="!err1" [loader2]="loader2" [userRepo]="userRepo"></app-repo-section>
 
+    
+    <h2 *ngIf="err1" class="text-2xl title font-semibold mb-4 mt-4 text-center"> {{ errMessage }} </h2>
 
 
     <!-- loader to indicate page change -->
@@ -69,7 +71,7 @@
     </div>
 
     <!-- Pagination bar at the end -->
-    <div *ngIf="userRepo" class="flex justify-between items-center mt-4">
+    <div *ngIf="userRepo && !err1" class="flex justify-between items-center mt-4">
       <button class="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none hover:bg-blue-600
          {{ currentPage === 1 ? 'bg-gray-300 hover:bg-gray-300 cursor-not-allowed' : '' }}"
         (click)="getRepos(currentPage - 1)" [disabled]="currentPage === 1">
@@ -78,7 +80,7 @@
 
       <div class="flex space-x-2">
         <ng-container *ngFor="let page of calculateVisiblePageRange(currentPage, totalPages)">
-          <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-800 focus:outline-none
+          <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none
             {{ currentPage === page ? 'bg-blue-700' : '' }}" (click)="getRepos(page)" [disabled]="currentPage === page"
             [class.font-semibold]="currentPage === page">
             {{ page }}

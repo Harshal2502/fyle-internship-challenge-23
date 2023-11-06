@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { RepoSectionComponent } from './repo-section/repo-section.component';
 import { ButtonLoaderComponent } from './button-loader/button-loader.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,13 @@ import { ButtonLoaderComponent } from './button-loader/button-loader.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
