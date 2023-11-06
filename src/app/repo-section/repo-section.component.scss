@@ -8,3 +8,7 @@
 .min-h-12rem {
   min-height: 12rem;
 }
+
+.non-selectable {
+  user-select: none;
+}

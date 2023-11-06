@@ -12,8 +12,8 @@
       <a target="_blank" [href]="repo.html_url" class="text-xl font-semibold text-blue-500 mb-2">{{ repo.name }}</a>
       {{ repo?.description?.length > 100 ? repo?.description?.slice(0, 100) + "..." : repo?.description }}
 
-      <!-- topics of the Repository -->
-      <div class="flex flex-row flex-wrap mt-4">
+      <!-- tags of the Repository -->
+      <div class="flex flex-row flex-wrap mt-4 non-selectable">
         <div class="p-2" *ngFor="let topic of repo.topics.slice(0, 4)">
           <span class="topic"> {{ topic }} </span>
         </div>
