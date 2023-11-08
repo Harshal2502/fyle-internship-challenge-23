@@ -49,10 +49,26 @@ describe('ApiService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(dummyUser);
   });
-  
 
-  it('should get user repositories', async () => {
-    const url = 'https://example.com/repos';
+  it('should handle failed info requests', () => {
+    const username = 'testUser';
+
+    apiService.getUser(username).subscribe(
+      (user) => {
+        fail(`Expected an error but the request succeeded.`);
+      },
+      (error) => {
+        expect(error.status).not.toBe(200);
+      }
+    );
+
+    const req = httpTestingController.expectOne(`https://api.github.com/users/${username}`);
+    expect(req.request.method).toBe('GET');
+    req.flush('Error Message', { status: 404, statusText: 'Error in API request' });
+  });
+
+  it('should get user repositories & a link header', async () => {
+    const url = 'https://api.github.com/users/username/repos';
     const dummyRepositories: Repo[] = [
       { id: 1, name: 'repo1', description: 'Description 1', html_url: 'URL 1', forks_count: 3, updated_at: 'Date 1', topics: [] },
       { id: 2, name: 'repo2', description: 'Description 2', html_url: 'URL 2', forks_count: 2, updated_at: 'Date 2', topics: [] },
@@ -63,6 +79,21 @@ describe('ApiService', () => {
 
     const response = await apiService.getRepositories(url);
     expect(response).toEqual(dummyResponse);
+  });
+
+
+  it('should handle failed repo requests', async () => {
+    const url = 'https://api.github.com/users/username/repos';
+    const axiosMock = new MockAdapter(axios);
+
+    axiosMock.onGet(url).reply(404, 'Error Message');
+
+    try {
+      await apiService.getRepositories(url);
+      fail('Expected an error but the request succeeded.');
+    } catch (error: any) {
+      expect(error.response.status).not.toBe(200);
+    }
   });
 
 });

@@ -1,14 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UserInfoComponent } from './user-info.component';
 
 describe('UserInfoComponent', () => {
   let component: UserInfoComponent;
   let fixture: ComponentFixture<UserInfoComponent>;
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [UserInfoComponent],
-    });
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(UserInfoComponent);
     component = fixture.componentInstance;
   });
@@ -16,52 +19,86 @@ describe('UserInfoComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
-  it('should contain an h2 and img element', () => {
-    const imgElement: HTMLElement = fixture.nativeElement.querySelector('img');
-    const h2Element: HTMLElement = fixture.nativeElement.querySelector('h2');
 
-    expect(imgElement).toBeTruthy();
-    expect(h2Element).toBeTruthy();
-  });
-
-  it('should contain paragraphs for bio, location, and blog', () => {
-    const bioElement: HTMLElement = fixture.nativeElement.querySelector('.user-bio');
-    const locationElement: HTMLElement = fixture.nativeElement.querySelector('.user-location');
-    const blogElement: HTMLElement = fixture.nativeElement.querySelector('.user-blog');
-
-    expect(bioElement).toBeTruthy();
-    expect(locationElement).toBeTruthy();
-    expect(blogElement).toBeTruthy();
-  });
-
-  it('should contain links in the blog paragraph', () => {
-    const blogLink: HTMLAnchorElement = fixture.nativeElement.querySelector('.user-blog');
-    expect(blogLink).toBeTruthy();
-  });
-
-  it('should bind user information to the template', () => {
-    const userInfo = {
-      avatar_url: 'https://example.com/avatar.png',
+  it('should display user information', () => {
+    const userInfoWithName = {
+      avatar_url: 'https://github.com/johndoe/avatar.png',
       name: 'John Doe',
+      login: 'johndoe',
       bio: 'Software Developer',
       location: 'New York, USA',
       blog: 'https://johndoe.com',
     };
 
-    component.userInfo = userInfo;
+    const userInfoWithoutName = {
+      avatar_url: 'https://github.com/johndoe/avatar.png',
+      name: null,
+      login: 'johndoe',
+      bio: null,
+      location: null,
+      blog: null,
+    };
+    component.userInfo = userInfoWithName;
     fixture.detectChanges();
 
-    const imgElement: HTMLImageElement = fixture.nativeElement.querySelector('img');
-    const h2Element: HTMLElement = fixture.nativeElement.querySelector('h2');
-    const bioElement: HTMLElement = fixture.nativeElement.querySelector('.user-bio');
-    const locationElement: HTMLElement = fixture.nativeElement.querySelector('.user-location');
-    const blogLink: HTMLAnchorElement = fixture.nativeElement.querySelector('.user-blog');
+    const compiled = fixture.debugElement.nativeElement;
 
-    expect(imgElement.getAttribute('src')).toEqual(userInfo.avatar_url);
-    expect(h2Element.textContent).toContain(userInfo.name);
-    expect(bioElement.textContent).toContain(userInfo.bio);
-    expect(locationElement.textContent).toContain(userInfo.location);
-    expect(blogLink.getAttribute('href')).toEqual(userInfo.blog);
+    expect(compiled.querySelector('.user-name').textContent).toContain('John Doe');
+    expect(compiled.querySelector('img').getAttribute('src')).toEqual('https://github.com/johndoe/avatar.png');
+    expect(compiled.querySelector('.user-bio').textContent).toContain('Software Developer');
+    expect(compiled.querySelector('.user-location').textContent).toContain('New York, USA');
+    expect(compiled.querySelector('.user-blog').getAttribute('href')).toEqual('https://johndoe.com');
+    
+    component.userInfo = userInfoWithoutName;
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('.user-name').textContent).toContain(userInfoWithoutName.login);
+    expect(compiled.querySelector('img').getAttribute('src')).toEqual('https://github.com/johndoe/avatar.png');
+    expect(compiled.querySelector('.user-bio').textContent).toContain('-');
+    expect(compiled.querySelector('.user-location').textContent).toContain('-');
+    expect(compiled.querySelector('.user-blog').getAttribute('href')).toEqual('-');
+  });
+
+
+  it('should update userInfo when input changes', () => {
+    const initialUserInfo = {
+      avatar_url: 'initial-avatar-url',
+      name: 'Initial User',
+      login: 'initialuser',
+      bio: 'Initial bio',
+      location: 'Initial location',
+      blog: 'https://initialblog.com',
+    };
+
+    const updatedUserInfo = {
+      avatar_url: 'updated-avatar-url',
+      name: 'Updated User',
+      login: 'updateduser',
+      bio: 'Updated bio',
+      location: 'Updated location',
+      blog: 'https://updatedblog.com',
+    };
+
+    component.userInfo = initialUserInfo;
+    fixture.detectChanges();
+
+    expect(component.userInfo).toEqual(initialUserInfo);
+
+    component.userInfo = updatedUserInfo;
+    fixture.detectChanges();
+
+    expect(component.userInfo).toEqual(updatedUserInfo);
+  });
+
+
+  it('should not get rendered if input is empty', () => {
+    const userInfo = null;
+
+    component.userInfo = userInfo;
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    
+    expect(compiled.querySelector('.info-component')).toBeNull();    
+
   });
 });
