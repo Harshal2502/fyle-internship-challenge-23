@@ -2,6 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { ApiService } from './services/api.service';
 import { ToastService } from './services/toast.service';
 import { userMessages } from 'src/utils/constants';
+import { User } from './models/user.model';
+import { Repo } from './models/repo.model';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +22,8 @@ export class AppComponent {
   }
 
   githubUsername: string = '';
-  userInfo: any;
-  userRepo: any;
+  userInfo: User | null = null;
+  userRepo: Repo[] = [];
   currentPage: number = 1;
   repoPerPage: number = 10;
   totalPages: number = 0;
@@ -36,7 +38,7 @@ export class AppComponent {
 
 
   // Function to fetch provided GitHub user's data
-  getUserData(username: string) {
+  getUserData(username: string): void {
     if (this.githubUsername === '') {
       this.toast.showWarning(userMessages.EMPTY_USERNAME);
       return;
@@ -58,7 +60,7 @@ export class AppComponent {
     this.err1 = false;
 
     this.apiService.getUser(username).subscribe(
-      (userData: any) => {
+      (userData: User) => {
         this.userInfo = userData;
 
         this.currentPage = 1;
@@ -70,9 +72,8 @@ export class AppComponent {
           this.loader1 = false;
 
           this.buttonLoader = false;
-          this.errMessage = `${
-            this.userInfo.name || this.userInfo.login || '-'
-          } ${userMessages.NO_REPOS_FOUND}`;
+          this.errMessage = `${this.userInfo.name || this.userInfo.login || '-'
+            } ${userMessages.NO_REPOS_FOUND}`;
           return;
         }
 
@@ -96,28 +97,37 @@ export class AppComponent {
     );
   }
 
-  async getRepos(page: number) {
+  async getRepos(page: number): Promise<void> {
     this.loader2 = true;
     this.currentPage = page;
 
-    const res = await this.apiService.getRepositories(
-      `${this.userInfo.repos_url}?per_page=${this.repoPerPage}&page=${this.currentPage}`
-    );
-    this.userRepo = res.data;
-    this.loader2 = false;
+    try {
+      const res: { data: Repo[], headers: any } = await this.apiService.getRepositories(
+        `${this.userInfo?.repos_url}?per_page=${this.repoPerPage}&page=${this.currentPage}`
+      );
+      this.userRepo = res.data;
+      this.loader2 = false;
 
 
-    // Exctracting info from Link header inorder to get the maximum page number count
-    const linkHeader = res.headers.link;
-    const parts = linkHeader.split(', ');
-    for (const part of parts) {
-      if (part.includes('rel="last"')) {
-        const match = /page=(\d+)>; rel="last"/.exec(part);
-        if (match) {
-          this.totalPages = parseInt(match[1]);
-          break;
+      // Exctracting info from Link header inorder to get the maximum page number count
+      const linkHeader = res.headers.link;
+      const parts = linkHeader.split(', ');
+      for (const part of parts) {
+        if (part.includes('rel="last"')) {
+          const match = /page=(\d+)>; rel="last"/.exec(part);
+          if (match) {
+            this.totalPages = parseInt(match[1]);
+            break;
+          }
         }
       }
+    }
+    catch (error: any) {
+      if (error.status === 403)
+        this.toast.showError(userMessages.FORBIDDEN);
+
+      this.loader1 = false;
+      this.buttonLoader = false;
     }
   }
 
